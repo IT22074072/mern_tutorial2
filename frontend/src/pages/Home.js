@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 //components
 import WorkoutDetails from "../components/WorkoutDetails";
+import WorkoutForm from "../components/WorkoutForm";
 
 function Home() {
   const [workouts, setWorkouts] = useState(null);
@@ -29,6 +30,7 @@ function Home() {
             ))}
 
         </div>
+        <WorkoutForm/>
 
     </div>
   )
