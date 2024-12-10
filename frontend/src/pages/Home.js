@@ -1,39 +1,49 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
 
-//components
+// Components
 import WorkoutDetails from "../components/WorkoutDetails";
 import WorkoutForm from "../components/WorkoutForm";
 
 function Home() {
-  const [workouts, setWorkouts] = useState(null);
+  // Using global context
+  const { workouts, dispatch } = useWorkoutsContext();
+
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
-        const response = await fetch('/api/workouts')
-        const data = await response.json(); // Parse the response as JSON, now we have workout objects
-        console.log(data.data);
-        setWorkouts(data.data);
+        const response = await fetch('/api/workouts');
+        const data = await response.json(); // Parse the response
+
+        console.log("Fetched data:", data);
+
+        if (response.ok && Array.isArray(data.data)) {
+          dispatch({ type: 'SET_WORKOUTS', payload: data.data });
+        } else {
+          console.error("Unexpected data format:", data);
+        }
       } catch (error) {
-        console.error("Error in fetching workouts", error);
+        console.error("Error in fetching workouts:", error);
       }
     };
 
     fetchWorkouts();
-  }, []); //fire only once when render the home component
+  }, [dispatch]); // Dependency array includes dispatch
 
   return (
     <div className="home">
-        <div className="workouts">
-            {workouts && workouts.map((workout)=>(
-                <WorkoutDetails key={workout._id} workout={workout} />
-            ))}
-
-        </div>
-        <WorkoutForm/>
-
+      <div className="workouts">
+        {Array.isArray(workouts) && workouts.length > 0 ? (
+          workouts.map((workout) => (
+            <WorkoutDetails key={workout._id} workout={workout} />
+          ))
+        ) : (
+          <p>No workouts available. Add one to get started!</p>
+        )}
+      </div>
+      <WorkoutForm />
     </div>
-  )
+  );
 }
 
 export default Home;

@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 export const getAllWorkouts = async (req, res) => {
   try {
     const workouts = await Workout.find({}).sort({ createdAt: -1 });
+    res.set("Cache-Control", "no-store"); // Disable caching
     res.status(200).json({ success: true, data: workouts });
   } catch (error) {
     console.error("Error in fetching workouts", error.message);
