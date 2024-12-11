@@ -1,6 +1,30 @@
 import React from 'react'
+import { useWorkoutsContext } from '../hooks/useWorkoutsContext';
 
 export default function WorkoutDetails({workout}) {
+  const {dispatch} = useWorkoutsContext()
+
+const handleClick = async () => {
+  try {
+    const response = await fetch('/api/workouts/' + workout._id, {
+      method: 'DELETE',
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Workout deleted:", data);
+      dispatch({ type: 'DELETE_WORKOUT', payload: data.data });
+    } else {
+      console.error("Error deleting workout:", data.error);
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+  }
+};
+
+
+
   return (
     <div className='workout-details'>
         <h4>{workout.title}</h4>
@@ -15,6 +39,8 @@ export default function WorkoutDetails({workout}) {
         <p>
             {workout.createdAt}
         </p>
+
+        <span onClick={handleClick}>delete</span>
     </div>
   )
 }

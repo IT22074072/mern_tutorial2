@@ -14,6 +14,10 @@ export const workoutReducer = (state, action) => {
       return {
         workouts: [action.payload, ...(state.workouts || [])], // Add new workout to the beginning
       };
+    case "DELETE_WORKOUT":
+      return {
+        workouts: state.workouts.filter((w) => w._id !== action.payload._id),
+      };
     default:
       console.warn(`Unhandled action type: ${action.type}`);
       return state; // Return unchanged state

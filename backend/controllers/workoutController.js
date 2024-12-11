@@ -40,7 +40,7 @@ export const deleteWorkout = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ success: false, message: "No such workout" });
+    return res.status(404).json({ success: false, message: "No such workout"});
   }
 
   try {
@@ -53,7 +53,7 @@ export const deleteWorkout = async (req, res) => {
     }
     res
       .status(200)
-      .json({ success: true, message: "Workout deleted successfully!" });
+      .json({ success: true, message: "Workout deleted successfully!" , data: workout});
   } catch (error) {
     console.error("Error in deleting workout", error.message);
     res.status(500).json({ success: false, message: "Server Error" });
